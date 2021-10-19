@@ -1,0 +1,168 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define int             long long 
+#define pll             pair<int,int>
+#define ppll            pair<int,pll>
+#define vvll            vector<vector<int>>
+#define sll             stack<int>
+#define qll             queue<int>
+#define vll             vector<int>
+#define vpll            vector<pll>
+#define vc              vector <char>
+#define vs              vector <string>
+#define pb              emplace_back
+#define prq             priority_queue
+#define setbits(x)      __builtin_popcountll(x)
+#define sps(x,y)        fixed<<setprecision(y)<<x
+#define hell            1000000007
+#define rep(i,s,n)      for(int i=s;i<n;i++)
+#define ff              first
+#define mem(arr,x)      memset(arr,x,sizeof(arr))
+#define ss              second
+#define pi              3.14159265358979323846
+#define all(v)          v.begin(),v.end()
+#define allr(x)         x.rbegin(),x.rend()
+#define mp              make_pair
+#define maxn            10001
+#define INF             1000000000009 //1e9
+void fast()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+#ifndef ONLINE_JUDGE
+	freopen("input.txt", "r", stdin);
+	freopen("output.txt", "w", stdout);
+#endif
+}
+const int N = (int)2e5 + 100;
+//---------------------------------------------
+int dr[4] = {0, 0, 1,-1};
+int dc[4] = {1,-1, 0, 0};
+ 
+int ddr[8]= {0, 0, 1, -1, 1, -1, 1, -1};
+int ddc[8]= {1, -1, 0, 0, 1, -1, -1, 1};
+ 
+int ddr1[8]= {1, 1, -1, -1, 2, 2, -2, -2};
+int ddc1[8]= {2, -2, 2, -2, 1, -1, 1, -1};
+//---------------------------------------------
+/*vll v[maxn];
+int low[maxn], in[maxn], timer;
+int vis[maxn];
+map<pll, int>br;
+//map<int, int>ar;
+
+bool cmp(pll g1, pll g2){
+	if(g1.ff==g2.ff) return g1.ss<g2.ss;
+	                 return g1.ff<g2.ff;
+}
+
+void dfsb(int node, int par){
+      vis[node]=1;
+      in[node]= low[node]=timer++;
+
+      for(auto child: v[node]){
+      	if(child== par)  continue;
+
+      	if(vis[child]==1){
+      		low[node]= min(low[node], in[child]);
+      	}
+      	else{
+      		dfsb(child, node);
+
+      		if(low[child]>in[node]){//bridge cond.
+      			int l= child;
+      			int r= node;
+      			if(l>r) swap(l,r);
+      			br[make_pair(l,r)]++;
+      		}
+      		low[node]= min(low[node], low[child]);
+      	}
+      }
+
+}
+*/
+/*void dfsa(int node, int par){
+
+	vis[node]=1;
+	int child_cnt=0;
+    in[node]= low[node]=timer++;
+    for(auto child: v[node]){
+      	if(child== par)  continue;
+
+      	if(vis[child]==1){
+      		low[node]= min(low[node], in[child]);
+      	}
+      	else{
+      		dfsa(child, node);
+      		child_cnt++;
+
+      		low[node]= min(low[node], low[child]);
+
+      		if(low[child]>=in[node] && par!=-1){
+      			ar[node]++;
+      		}
+      	}
+      }
+      if(child_cnt>1 && par==-1) ar[node]++;
+
+
+}*/
+
+vpll v[maxn]; 
+int dis[maxn];
+int node[maxn];
+
+void printpath(int n){
+    if(n!=1)
+        printpath(node[n]);
+    cout<<n<<" ";
+}
+
+int32_t main() {
+     fast();
+	//int t,z;
+    //cin>>t;
+    //rep(z,1,t+1){
+    //cout<<"Case #"<<z<<": "
+    int n,m,x,y,w;
+    cin>>n>>m;
+
+   // rep(i,0,n+1) v[i].clear();
+    mem(dis,-1);
+    rep(i,1,n+1) node[i]=i;
+
+    rep(i,0,m){
+                         cin>>x>>y>>w;
+                         v[x].pb(y,w);
+                         v[y].pb(x,w);
+    }
+
+    //int s;
+    //cin>>s;
+    set<pll>q;
+    dis[1]=0;
+
+    q.insert({1,0});
+    while(!q.empty()){
+
+    	pll curr = make_pair(q.begin()->ff, q.begin()->ss);
+    	q.erase(q.begin());
+
+    	for(auto i:v[curr.ff]){ //i= node, dis;
+         if(dis[i.ff]==-1){
+            dis[i.ff]= i.ss+ dis[curr.ff];
+            q.insert({i.ff, dis[i.ff]});
+            node[i.ff]= curr.ff;
+         }
+         else if(dis[curr.ff]+i.ss< dis[i.ff]){
+         	dis[i.ff]= i.ss+ dis[curr.ff];
+            q.insert({i.ff, dis[i.ff]});
+            node[i.ff]= curr.ff;
+         }
+    	}
+    }
+   if(dis[n]==-1) cout<<"-1";
+   else  printpath(n);
+   return 0;
+}
+
